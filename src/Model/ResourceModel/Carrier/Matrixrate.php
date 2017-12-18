@@ -574,23 +574,31 @@ class Matrixrate extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
             return false;
         }
 
+        // validate price
+        $cost = $this->_parseDecimalValue($row[8]);
+        if ($price === false) {
+            $this->importErrors[] = __('Please correct Max Basket Price "%1" in Row #%2.', $row[8], $rowNumber);
+            return false;
+        }
+
         // validate shipping method
-        if ($row[8] == '*' || $row[8] == '') {
-            $this->importErrors[] = __('Please correct Shipping Method "%1" in Row #%2.', $row[8], $rowNumber);
+        if ($row[9] == '*' || $row[9] == '') {
+            $this->importErrors[] = __('Please correct Shipping Method "%1" in Row #%2.', $row[9], $rowNumber);
             return false;
         } else {
-            $shippingMethod = $row[8];
+            $shippingMethod = $row[9];
         }
 
         // protect from duplicate
         $hash = sprintf(
-            "%s-%s-%s-%s-%F-%F-%s",
+            "%s-%s-%s-%s-%F-%F-%F-%s",
             $countryId,
             $city,
             $regionId,
             $zipCode,
             $valueFrom,
             $valueTo,
+            $cost,
             $shippingMethod
         );
         if (isset($this->importUniqueHash[$hash])) {
@@ -604,6 +612,7 @@ class Matrixrate extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
                 $zip_to,
                 $valueFrom,
                 $valueTo,
+                $cost,
                 $shippingMethod
             );
             return false;
@@ -621,6 +630,7 @@ class Matrixrate extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
             $valueFrom,                 // condition_value From
             $valueTo,                   // condition_value To
             $price,                     // price
+            $cost,
             $shippingMethod
         ];
     }
@@ -645,6 +655,7 @@ class Matrixrate extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
                 'condition_from_value',
                 'condition_to_value',
                 'price',
+                'cost',
                 'shipping_method',
             ];
             $this->getConnection()->insertArray($this->getMainTable(), $columns, $data);

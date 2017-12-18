@@ -182,7 +182,7 @@ class Matrixrate extends \Magento\Shipping\Model\Carrier\AbstractCarrier impleme
         $foundRates = false;
 
         foreach ($rateArray as $rate) {
-            if (!empty($rate) && $rate['price'] >= 0) {
+            if (!empty($rate) && $rate['price'] >= 0 && $rate['cost'] >= $request->getPackageValue()) {
                 /** @var \Magento\Quote\Model\Quote\Address\RateResult\Method $method */
                 $method = $this->resultMethodFactory->create();
 
@@ -201,6 +201,7 @@ class Matrixrate extends \Magento\Shipping\Model\Carrier\AbstractCarrier impleme
                 $method->setPrice($shippingPrice);
                 $method->setCost($rate['cost']);
 
+                
                 $result->append($method);
                 $foundRates = true; // have found some valid rates
             }
@@ -219,6 +220,8 @@ class Matrixrate extends \Magento\Shipping\Model\Carrier\AbstractCarrier impleme
             );
             $result->append($error);
         }
+
+        $request->setPackageValue(0);
 
         return $result;
     }
@@ -245,12 +248,12 @@ class Matrixrate extends \Magento\Shipping\Model\Carrier\AbstractCarrier impleme
             'condition_name' => [
                 'package_weight' => __('Weight vs. Destination'),
                 'package_value' => __('Order Subtotal vs. Destination'),
-                'package_qty' => __('# of Items vs. Destination'),
+                'package_qty' => __('# of Items vs. Destination')
             ],
             'condition_name_short' => [
                 'package_weight' => __('Weight'),
                 'package_value' => __('Order Subtotal'),
-                'package_qty' => __('# of Items'),
+                'package_qty' => __('# of Items')
             ],
         ];
 
