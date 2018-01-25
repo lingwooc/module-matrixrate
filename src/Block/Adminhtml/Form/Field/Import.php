@@ -58,7 +58,7 @@ class Import extends \Magento\Framework\Data\Form\Element\AbstractElement
     {
         $html = '';
 
-        $html .= '<input id="time_condition" type="hidden" name="' . $this->getName() . '" value="' . time() . '" />';
+        $html .= '<input id="time_condition_matrix" type="hidden" name="' . $this->getName() . '" value="' . time() . '" />';
 
         $html .= <<<EndHTML
         <script>
@@ -68,7 +68,7 @@ class Import extends \Magento\Framework\Data\Form\Element\AbstractElement
         {
             var conditionNameElement = Event.element(event);
             if (conditionNameElement && conditionNameElement.id) {
-                $('time_condition').value = '_' + conditionNameElement.value + '/' + Math.random();
+                $('time_condition_matrix').value = '_' + conditionNameElement.value + '/' + Math.random();
             }
         }
         });

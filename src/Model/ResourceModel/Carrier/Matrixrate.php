@@ -576,13 +576,13 @@ class Matrixrate extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
 
         // validate price
         $cost = $this->_parseDecimalValue($row[8]);
-        if ($price === false) {
+        if ($cost === false) {
             $this->importErrors[] = __('Please correct Max Basket Price "%1" in Row #%2.', $row[8], $rowNumber);
             return false;
         }
 
         // validate shipping method
-        if ($row[9] == '*' || $row[9] == '') {
+        if (sizeof($row)>9 && $row[9] == '*' || $row[9] == '') {
             $this->importErrors[] = __('Please correct Shipping Method "%1" in Row #%2.', $row[9], $rowNumber);
             return false;
         } else {
